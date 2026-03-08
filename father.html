@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mere Pyare Abu ki Yaad</title>
+    <style>
+        :root {
+            --gold: #d4af37;
+            --glow: rgba(212, 175, 55, 0.6);
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            margin: 0;
+            background: #000;
+            color: white;
+            font-family: 'Times New Roman', serif;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #stars {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+        }
+
+        /* Made by Almas */
+        .footer-credit {
+            position: fixed;
+            bottom: 20px;
+            right: 25px;
+            font-size: 0.9rem;
+            color: var(--gold);
+            letter-spacing: 2px;
+            text-shadow: 0 0 8px var(--glow);
+            opacity: 0.8;
+            font-style: italic;
+            z-index: 10;
+        }
+
+        /* Sparkles */
+        .sparkle {
+            position: absolute;
+            width: 4px; height: 4px;
+            background: var(--gold);
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 10px var(--gold);
+            animation: fly 1s linear forwards;
+        }
+        @keyframes fly { to { transform: translateY(50px) scale(0); opacity: 0; } }
+
+        /* Photo Scene */
+        .scene {
+            position: relative;
+            width: 380px;
+            height: 520px;
+            perspective: 1200px;
+        }
+
+        .photo-reveal {
+            position: absolute;
+            width: 280px;
+            height: 400px;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            border: 4px solid var(--gold);
+            border-radius: 15px;
+            z-index: 1;
+            opacity: 0;
+            transition: all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: url('i.jpeg') center/cover;
+            box-shadow: 0 0 50px var(--glow);
+        }
+
+        .photo-reveal.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            animation: pulse 3s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 30px var(--glow); }
+            50% { box-shadow: 0 0 60px var(--gold); }
+        }
+
+        /* Card Split */
+        .card-wrapper {
+            position: absolute;
+            width: 100%; height: 100%;
+            display: flex;
+            z-index: 2;
+            cursor: pointer;
+        }
+
+        .card-half {
+            width: 50%; height: 100%;
+            background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
+            border: 2px solid var(--gold);
+            backdrop-filter: blur(15px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: transform 1.5s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        .left-half { border-radius: 200px 0 0 20px; transform-origin: left; align-items: flex-end; }
+        .right-half { border-radius: 0 200px 20px 0; transform-origin: right; align-items: flex-start; }
+        .split-active .left-half { transform: rotateY(-110deg) translateX(-20px); opacity: 0.3; }
+        .split-active .right-half { transform: rotateY(110deg) translateX(20px); opacity: 0.3; }
+
+        h1 { font-size: 2.2rem; color: var(--gold); margin: 0; letter-spacing: 2px; }
+
+        /* Button Layout */
+        .btn-container {
+            position: absolute;
+            bottom: -80px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            z-index: 5;
+        }
+
+        .magic-btn {
+            background: rgba(0,0,0,0.6);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 10px 25px;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: 0.4s;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .magic-btn:hover { background: var(--gold); color: black; transform: translateY(-5px); }
+
+        /* NEW STYLE: Bottom Glass Overlay */
+        .overlay {
+            position: fixed;
+            bottom: -100%; /* Hidden at start */
+            left: 0;
+            width: 100%;
+            height: 60%;
+            background: linear-gradient(to top, #000 70%, transparent);
+            backdrop-filter: blur(15px);
+            border-top: 2px solid var(--gold);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: bottom 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            text-align: center;
+            border-radius: 40px 40px 0 0;
+        }
+
+        .overlay.active {
+            bottom: 0;
+        }
+
+        .overlay-content {
+            padding: 40px;
+            max-width: 600px;
+        }
+
+        .overlay h2 {
+            color: var(--gold);
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px var(--glow);
+        }
+
+        .overlay p {
+            font-size: 1.2rem;
+            line-height: 1.7;
+            color: #ddd;
+            font-style: italic;
+        }
+
+        .close-btn {
+            margin-top: 25px;
+            background: transparent;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="stars"></canvas>
+
+    <audio id="bgMusic" loop>
+        <source src="song.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="footer-credit">Made by Almas</div>
+
+    <div class="scene">
+        <div id="photo" class="photo-reveal"></div>
+
+        <div id="cardWrapper" class="card-wrapper" onclick="toggleSplit()">
+            <div class="card-half left-half">
+                <div class="content-left">
+                    <p style="color: var(--gold); font-size: 0.8rem;">PYARE ABU</p>
+                    <h1>PERVAIZ</h1>
+                </div>
+            </div>
+            <div class="card-half right-half">
+                <div class="content-right">
+                    <p style="color: var(--gold); font-size: 0.8rem;">&nbsp;JAN</p>
+                    <h1>AKHTAR</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-container">
+            <button class="magic-btn" onclick="openOverlay('yaadein')">Yaadein ✨</button>
+            <button class="magic-btn" onclick="openOverlay('shafqat')">Shafqat 🕊️</button>
+        </div>
+    </div>
+
+    <div id="yaadein" class="overlay">
+        <div class="overlay-content">
+            <h2>Sunheri Yaadein</h2>
+            <p>"Abu ki har baat mein ek sabaq hota tha. Unka muskurana, unka haath pakar kar chalna... Wo magic aaj bhi mere dil mein zinda hai."</p>
+            <button class="close-btn" onclick="closeOverlay('yaadein')">Wapis Chalo</button>
+        </div>
+    </div>
+
+    <div id="shafqat" class="overlay">
+        <div class="overlay-content">
+            <h2>Unki Shafqat</h2>
+            <p>"Dunya ki bheer mein jab sukoon nahi milta, toh Abu ki duayein yaad aati hain. Allah unko jannat-ul-firdous mein aala muqaam ata farmaye. Ameen."</p>
+            <button class="close-btn" onclick="closeOverlay('shafqat')">Wapis Chalo</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleSplit() {
+            const card = document.getElementById('cardWrapper');
+            const photo = document.getElementById('photo');
+            const music = document.getElementById('bgMusic');
+            
+            const isOpening = card.classList.toggle('split-active');
+            photo.classList.toggle('show');
+
+            if (isOpening) {
+                music.play().catch(e => console.log("Music play blocked."));
+            } else {
+                music.pause();
+                music.currentTime = 0;
+            }
+        }
+
+        function openOverlay(id) {
+            document.getElementById(id).classList.add('active');
+        }
+
+        function closeOverlay(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        // Mouse Sparkles
+        document.addEventListener('mousemove', function(e) {
+            let sparkle = document.createElement('div');
+            sparkle.classList.add('sparkle');
+            sparkle.style.left = e.pageX + 'px';
+            sparkle.style.top = e.pageY + 'px';
+            document.body.appendChild(sparkle);
+            setTimeout(() => { sparkle.remove(); }, 1000);
+        });
+
+        // Background Stars
+        const canvas = document.getElementById('stars');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function initStars() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            for (let i = 0; i < 150; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 2,
+                    speed: 0.3 + Math.random() * 0.5
+                });
+            }
+        }
+        function drawStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#fff";
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+                p.y -= p.speed;
+                if (p.y < 0) p.y = canvas.height;
+            });
+            requestAnimationFrame(drawStars);
+        }
+        window.addEventListener('resize', initStars);
+        initStars(); drawStars();
+    </script>
+</body>
+</html>
